@@ -610,10 +610,14 @@ Instore.Api = (function() {
         popup.close();
         window.clearInterval(oauthInterval);
         if (callback) {
-          return callback();
+          callback();
         }
       }
-    }, 1000);
+      if (match = hash.match('error=access_denied')) {
+        popup.close();
+        return window.clearInterval(oauthInterval);
+      }
+    }, 500);
   };
 
   Api.prototype.me = function(callback) {

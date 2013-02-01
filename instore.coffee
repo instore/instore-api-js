@@ -264,7 +264,11 @@ class Instore.Api
         popup.close()
         window.clearInterval(oauthInterval)
         callback() if callback
-    , 1000)
+
+      if match = hash.match('error=access_denied')
+        popup.close()
+        window.clearInterval(oauthInterval)
+    , 500)
 
   me: (callback) ->
     new Instore.Me(@accessToken, host: @host).fetch(callback)
