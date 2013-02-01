@@ -57,6 +57,13 @@ class Instore.Endpoint
       data: params
       success: callback
 
+class Instore.Me extends Instore.Endpoint
+  resource: 'me'
+
+  me: (callback) ->
+    params = {access_token: @accessToken}
+
+    $.getJSON "#{@path()}/#{id}", params, callback
 
 class Instore.Categories extends Instore.Endpoint
   resource: 'categories'
@@ -237,22 +244,30 @@ class Instore.Api
     @host = @options.host || @baseUrl
     @
 
-  login: ->
+  login: (callback) ->
     options =
-      path: "#{@baseUrl}/oauth/authorize?client_id=#{@clientId}&redirect_uri=#{window.location.href}&response_type=token"
+      path: "#{@host}/oauth/authorize?client_id=#{@clientId}&redirect_uri=#{window.location.href}&response_type=token"
       windowName: 'Login to Instore'
       windowOptions: 'width=880,height=380,modal=no,resizable=no,toolbar=no,menubar=no,scrollbars=no,alwaysRaise=yes'
       
     popup = window.open(options.path, options.windowName, options.windowOptions)
     
     oauthInterval = window.setInterval( =>
+      if popup.closed
+        window.clearInterval(oauthInterval)
+        return
+
       hash = popup.location.hash || ''
       if match = hash.match('access_token=([^&]*)')
         @accessToken = unescape(match[1])
         @setCookie(@cookieName, @accessToken, 1)
         popup.close()
         window.clearInterval(oauthInterval)
+        callback() if callback
     , 1000)
+
+  me: (callback) ->
+    new Instore.Me(@accessToken, host: @host).fetch(callback)
 
   appliedDiscounts: ->
     new Instore.AppliedDiscounts(@accessToken, host: @host)
@@ -301,6 +316,9 @@ class Instore.Api
 
   uniqueQualities: ->
     new Instore.UniqueQualities(@accessToken, host: @host)
+
+  logout: ->
+    @setCookie(@cookieName, '', 0)
 
   setCookie: (cookieName, cookieValue, nDays) ->
     today = new Date()

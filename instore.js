@@ -98,6 +98,28 @@ Instore.Endpoint = (function() {
 
 })();
 
+Instore.Me = (function(_super) {
+
+  __extends(Me, _super);
+
+  function Me() {
+    return Me.__super__.constructor.apply(this, arguments);
+  }
+
+  Me.prototype.resource = 'me';
+
+  Me.prototype.me = function(callback) {
+    var params;
+    params = {
+      access_token: this.accessToken
+    };
+    return $.getJSON("" + (this.path()) + "/" + id, params, callback);
+  };
+
+  return Me;
+
+})(Instore.Endpoint);
+
 Instore.Categories = (function(_super) {
 
   __extends(Categories, _super);
@@ -566,25 +588,38 @@ Instore.Api = (function() {
 
   }
 
-  Api.prototype.login = function() {
+  Api.prototype.login = function(callback) {
     var oauthInterval, options, popup,
       _this = this;
     options = {
-      path: "" + this.baseUrl + "/oauth/authorize?client_id=" + this.clientId + "&redirect_uri=" + window.location.href + "&response_type=token",
+      path: "" + this.host + "/oauth/authorize?client_id=" + this.clientId + "&redirect_uri=" + window.location.href + "&response_type=token",
       windowName: 'Login to Instore',
       windowOptions: 'width=880,height=380,modal=no,resizable=no,toolbar=no,menubar=no,scrollbars=no,alwaysRaise=yes'
     };
     popup = window.open(options.path, options.windowName, options.windowOptions);
     return oauthInterval = window.setInterval(function() {
       var hash, match;
+      if (popup.closed) {
+        window.clearInterval(oauthInterval);
+        return;
+      }
       hash = popup.location.hash || '';
       if (match = hash.match('access_token=([^&]*)')) {
         _this.accessToken = unescape(match[1]);
         _this.setCookie(_this.cookieName, _this.accessToken, 1);
         popup.close();
-        return window.clearInterval(oauthInterval);
+        window.clearInterval(oauthInterval);
+        if (callback) {
+          return callback();
+        }
       }
     }, 1000);
+  };
+
+  Api.prototype.me = function(callback) {
+    return new Instore.Me(this.accessToken, {
+      host: this.host
+    }).fetch(callback);
   };
 
   Api.prototype.appliedDiscounts = function() {
@@ -681,6 +716,10 @@ Instore.Api = (function() {
     return new Instore.UniqueQualities(this.accessToken, {
       host: this.host
     });
+  };
+
+  Api.prototype.logout = function() {
+    return this.setCookie(this.cookieName, '', 0);
   };
 
   Api.prototype.setCookie = function(cookieName, cookieValue, nDays) {
