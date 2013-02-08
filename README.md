@@ -5,11 +5,15 @@ Javascript wrapper for the Instore API
 
 ## Getting started
 
-1. Initialize Instore.Api class passing your client\_id.
+1. Include Javascript client on your page
+
+        <script type="text/javascript" src="http://instoredoes.com/api/instore.js"></script>
+
+2. Initialize Instore.Api class passing your client\_id.
 
         instore = new Instore.Api('346C7E9A9577844A1DD7')
 
-2. Authorize Instore Api by login in through OAauth. 
+3. Authorize Instore Api by login in through OAauth. 
 
         instore.login(function(){
           // User successfully logged in
@@ -24,13 +28,13 @@ Javascript wrapper for the Instore API
         
   Client will store OAuth access token in cookie for one day after user authorizes Instore Api.
 
-3. Perform asynchronous requests to Instore Api endpoints.
+4. Perform asynchronous requests to Instore Api endpoints.
         
         instore.categories().fetch(function(res){
           res.data // [...]
         })
 
-4. At any point you can use logout function which will reset OAuth access token.
+5. At any point you can use logout function which will reset OAuth access token.
   
         instore.logout()
 
