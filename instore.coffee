@@ -260,7 +260,7 @@ class Instore.Api
       hash = popup.location.hash || ''
       if match = hash.match('access_token=([^&]*)')
         @accessToken = unescape(match[1])
-        @setCookie(@cookieName, @accessToken, 1)
+        @setCookie(@cookieName, @accessToken, 365)
         popup.close()
         window.clearInterval(oauthInterval)
         callback() if callback
