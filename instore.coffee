@@ -1,4 +1,6 @@
-Instore = {}
+Instore = {
+  version: '0.0.1'
+}
 
 class Instore.Endpoint
   baseUrl: 'https://api.instoredoes.com'
@@ -236,7 +238,6 @@ class Instore.UniqueQualities extends Instore.Endpoint
 
 
 class Instore.Api
-  @version: '0.0.1'
   baseUrl: 'https://api.instoredoes.com'
   cookieName: 'instore_access_token'
 

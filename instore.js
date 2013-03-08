@@ -3,7 +3,9 @@ var Instore, exports,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-Instore = {};
+Instore = {
+  version: '0.0.1'
+};
 
 Instore.Endpoint = (function() {
 
@@ -574,8 +576,6 @@ Instore.UniqueQualities = (function(_super) {
 })(Instore.Endpoint);
 
 Instore.Api = (function() {
-
-  Api.version = '0.0.1';
 
   Api.prototype.baseUrl = 'https://api.instoredoes.com';
 
