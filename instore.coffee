@@ -19,13 +19,31 @@ class Instore.Endpoint
 
     params.access_token = @accessToken
 
-    $.getJSON @path(), params, callback
+    if typeof callback == 'object'
+      options = callback
+    else
+      options = {success: callback}
+
+    options.url = @path()
+    options.data = params
+    options.type = 'GET'
+
+    $.ajax(options)
 
   find: (id, callback) ->
     throw 'UUID id parameter required' if typeof id != 'string'    
     params = {access_token: @accessToken}
 
-    $.getJSON "#{@path()}/#{id}", params, callback
+    if typeof callback == 'object'
+      options = callback
+    else
+      options = {success: callback}
+
+    options.url = "#{@path()}/#{id}"
+    options.data = params
+    options.type = 'GET'
+
+    $.ajax(options)
 
   createResource: (params = {}, callback) ->
     if typeof params == 'function' && !callback
@@ -33,7 +51,17 @@ class Instore.Endpoint
       params = {}
 
     params.access_token = @accessToken
-    $.post @path(), params, callback
+
+    if typeof callback == 'object'
+      options = callback
+    else
+      options = {success: callback}
+
+    options.url = @path()
+    options.data = params
+    options.type = 'POST'
+
+    $.ajax(options)
 
   updateResource: (id, params = {}, callback) ->
     throw 'UUID id parameter required' if typeof id != 'string' 
@@ -43,21 +71,31 @@ class Instore.Endpoint
 
     params.access_token = @accessToken
 
-    $.ajax 
-      url: "#{@path()}/#{id}"
-      type: 'PUT'
-      data: params
-      success: callback
+    if typeof callback == 'object'
+      options = callback
+    else
+      options = {success: callback}
+
+    options.url = "#{@path()}/#{id}"
+    options.data = params
+    options.type = 'PUT'
+
+    $.ajax(options)
 
   destroyResource: (id, callback) ->
     throw 'UUID id parameter required' if typeof id != 'string'
     params = {access_token: @accessToken}
 
-    $.ajax 
-      url: "#{@path()}/#{id}"
-      type: 'DELETE'
-      data: params
-      success: callback
+    if typeof callback == 'object'
+      options = callback
+    else
+      options = {success: callback}
+
+    options.url = "#{@path()}/#{id}"
+    options.data = params
+    options.type = 'DELETE'
+
+    $.ajax(options)
 
 class Instore.Me extends Instore.Endpoint
   resource: 'me'
@@ -65,7 +103,16 @@ class Instore.Me extends Instore.Endpoint
   me: (callback) ->
     params = {access_token: @accessToken}
 
-    $.getJSON "#{@path()}/#{id}", params, callback
+    if typeof callback == 'object'
+      options = callback
+    else
+      options = {success: callback}
+
+    options.url = "#{@path()}/#{id}"
+    options.data = params
+    options.type = 'GET'
+
+    $.ajax(options)
 
 class Instore.Categories extends Instore.Endpoint
   resource: 'categories'
@@ -183,13 +230,33 @@ class Instore.Orders extends Instore.Endpoint
     throw 'UUID id parameter required' if typeof id != 'string'
 
     params = {access_token: @accessToken}
-    $.post "#{@path()}/#{id}/void", params, callback
+
+    if typeof callback == 'object'
+      options = callback
+    else
+      options = {success: callback}
+
+    options.url = "#{@path()}/#{id}/void"
+    options.data = params
+    options.type = 'POST'
+
+    $.ajax(options)
 
   refund: (id, callback) ->
     throw 'UUID id parameter required' if typeof id != 'string'
 
     params = {access_token: @accessToken}
-    $.post "#{@path()}/#{id}/refund", params, callback
+
+    if typeof callback == 'object'
+      options = callback
+    else
+      options = {success: callback}
+
+    options.url = "#{@path()}/#{id}/refund"
+    options.data = params
+    options.type = 'POST'
+
+    $.ajax(options)
 
   hold: (id, params, callback) ->
     throw 'UUID id parameter required' if typeof id != 'string'
@@ -198,13 +265,33 @@ class Instore.Orders extends Instore.Endpoint
       params = {}
 
     params.access_token = @accessToken
-    $.post "#{@path()}/#{id}/hold_order", params, callback
+
+    if typeof callback == 'object'
+      options = callback
+    else
+      options = {success: callback}
+
+    options.url = "#{@path()}/#{id}/hold_order"
+    options.data = params
+    options.type = 'POST'
+
+    $.ajax(options)
 
   unhold: (id, callback) ->
     throw 'UUID id parameter required' if typeof id != 'string'
 
     params = {access_token: @accessToken}
-    $.post "#{@path()}/#{id}/unhold_order", params, callback
+
+    if typeof callback == 'object'
+      options = callback
+    else
+      options = {success: callback}
+
+    options.url = "#{@path()}/#{id}/unhold_order"
+    options.data = params
+    options.type = 'POST'
+
+    $.ajax(options)
 
 class Instore.Payments extends Instore.Endpoint
   resource: 'payments'

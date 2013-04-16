@@ -50,6 +50,14 @@ Response object maps API fields :
       response.data    // {...}
     })
 
+Last option can be a function that will be triggered when server successfully response. It is also possible to pass object containing callbacks for success, error and complete events i.e. :
+
+    instore.categories().find('17b530c0-fd28-4091-94b0-aab2417936ae', {
+        success: function() {console.log('OK')}, 
+        complete: function() {console.log('COMPLETE')}, 
+        error: function(){ console.log('Error') } 
+    })
+
 Each endpoint support limit and page options for paginating results
 
     instore.categories().fetch({page: 2}, function(res){ ... })
